@@ -103,9 +103,6 @@ docker compose logs -f aggregator
 That's it! 🎉 Prometheus UI at `localhost:9090`, RabbitMQ management UI at
 `localhost:15672` (guest/guest), raw metrics at `localhost:9100/metrics`.
 
-> **No Docker?** See [`docs/manual-setup.md`](docs/manual-setup.md) for the
-> full manual install (Go, Python, RabbitMQ, protoc) on Windows/macOS/Linux.
-
 ---
 
 ## 📂 Project Structure
