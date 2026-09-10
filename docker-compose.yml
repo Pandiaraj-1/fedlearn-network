@@ -1,0 +1,94 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # management UI (guest/guest)
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090" # Prometheus UI
+    depends_on:
+      - aggregator
+
+  aggregator:
+    build:
+      context: .
+      dockerfile: aggregator/Dockerfile
+    environment:
+      GRPC_ADDR: ":50051"
+      METRICS_ADDR: ":9100"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+      MIN_NODES_PER_ROUND: "5"
+      MAX_ROUNDS: "25"
+    ports:
+      - "50051:50051" # gRPC
+      - "9100:9100"   # Prometheus metrics
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  edge-node-0:
+    build:
+      context: .
+      dockerfile: edge_node/Dockerfile
+    command: ["--node-id", "node-0", "--node-index", "0", "--total-nodes", "5"]
+    environment:
+      AGGREGATOR_ADDR: "aggregator:50051"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - aggregator
+
+  edge-node-1:
+    build:
+      context: .
+      dockerfile: edge_node/Dockerfile
+    command: ["--node-id", "node-1", "--node-index", "1", "--total-nodes", "5"]
+    environment:
+      AGGREGATOR_ADDR: "aggregator:50051"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - aggregator
+
+  edge-node-2:
+    build:
+      context: .
+      dockerfile: edge_node/Dockerfile
+    command: ["--node-id", "node-2", "--node-index", "2", "--total-nodes", "5"]
+    environment:
+      AGGREGATOR_ADDR: "aggregator:50051"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - aggregator
+
+  edge-node-3:
+    build:
+      context: .
+      dockerfile: edge_node/Dockerfile
+    command: ["--node-id", "node-3", "--node-index", "3", "--total-nodes", "5"]
+    environment:
+      AGGREGATOR_ADDR: "aggregator:50051"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - aggregator
+
+  edge-node-4:
+    build:
+      context: .
+      dockerfile: edge_node/Dockerfile
+    command: ["--node-id", "node-4", "--node-index", "4", "--total-nodes", "5"]
+    environment:
+      AGGREGATOR_ADDR: "aggregator:50051"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - aggregator

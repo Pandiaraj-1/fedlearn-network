@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+aggregator/aggregator
+*.log
+.venv/
+venv/
+.pytest_cache/
+prometheus-data/

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package federated;
+
+option go_package = "fedlearn/pb";
+
+// FederatedLearning is the coordination contract between the central
+// Go aggregator and Python edge nodes. Only model weights ever cross
+// this interface -- raw training data never leaves an edge node.
+service FederatedLearning {
+  // RegisterNode announces a new edge node to the aggregator before
+  // training starts, so the aggregator knows how many participants
+  // to expect each round.
+  rpc RegisterNode(RegisterRequest) returns (RegisterResponse);
+
+  // GetGlobalModel lets an edge node fetch the current global model
+  // and round number. Edge nodes poll this after publishing an update
+  // to know when the next round's weights are ready.
+  rpc GetGlobalModel(ModelRequest) returns (ModelResponse);
+
+  // GetStatus returns aggregator-wide state, used by the CLI/dashboard.
+  rpc GetStatus(StatusRequest) returns (StatusResponse);
+}
+
+message RegisterRequest {
+  string node_id = 1;
+  int32 num_samples = 2;   // size of this node's local (private) dataset
+  int32 model_size = 3;    // length of this node's flattened weight vector
+}
+
+message RegisterResponse {
+  bool success = 1;
+  int32 model_size = 2;    // length of the flat weight vector all nodes must send
+  int32 current_round = 3;
+}
+
+message ModelRequest {
+  string node_id = 1;
+  int32 last_seen_round = 2; // node blocks/polls until round > last_seen_round
+}
+
+message ModelResponse {
+  int32 round = 1;
+  repeated float weights = 2;
+  bool training_complete = 3;
+  int32 min_nodes_per_round = 4;
+}
+
+message StatusRequest {}
+
+message StatusResponse {
+  int32 current_round = 1;
+  int32 registered_nodes = 2;
+  int32 updates_this_round = 3;
+  double last_round_avg_loss = 4;
+  bool training_complete = 5;
+}
