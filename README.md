@@ -1,4 +1,4 @@
-<div align="center"> # Privacy-Preserving Federated Learning Network  </div>
+# Privacy-Preserving Federated Learning Network 
 
 <div align="center">
 
