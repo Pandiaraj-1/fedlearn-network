@@ -12,7 +12,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
 
 **A working, decentralized training system where edge nodes learn from private data they never share.**
-Trains a shared model across simulated devices, clips + noises every gradient (differential privacy), and merges updates with Federated Averaging — verified end-to-end, loss `2.11 → 0.54` over 25 rounds.
+Trains a shared model across simulated devices, clips + noises every gradient (differential privacy), and merges updates with Federated Averaging — verified end-to-end, loss `2.11 → 0.54` over[...]
 
 • [📖 Full Project Guide](docs/Federated_Learning_Network_Project_Guide.pdf) • [📊 Live Metrics](http://localhost:9100/metrics) • [🏗️ Architecture](#️-architecture) •
 
@@ -44,17 +44,17 @@ Trains a shared model across simulated devices, clips + noises every gradient (d
 ## 🏗️ Architecture
 
 ```
-┌───────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────�[...]
 │                          EDGE DEVICES                              │
 │      Node 0 · Node 1 · Node 2 · ... · Node N  (private data)       │
-└───────────┬─────────────────────────────────────────┬─────────────┘
+└───────────┬─────────────────────────────────────────┬──────────�[...]
             │ gRPC: GetGlobalModel (poll)              │ Publish update
             ▼                                          ▼
 ┌────────────────────────────┐            ┌────────────────────────────┐
 │    CENTRAL AGGREGATOR       │            │         RABBITMQ            │
 │    Go + gRPC · Port 50051   │◀──────────▶│   model_updates queue        │
 │    FedAvg round engine      │  consume   │       Port 5672              │
-└──────────────┬──────────────┘            └──────────────────────────────┘
+└──────────────┬──────────────┘            └─────────────────────────────�[...]
                │ scrape
                ▼
 ┌────────────────────────────┐
@@ -219,6 +219,8 @@ Publish weights → RabbitMQ (model_updates) → aggregator consumes
 | Round latency (this demo model) | milliseconds |
 
 Full logs: [`docs/sample_run_aggregator.log`](docs/sample_run_aggregator.log)
+
+![Output](docs/images/output.png)
 
 ---
 
