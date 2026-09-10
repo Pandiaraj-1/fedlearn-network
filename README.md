@@ -12,7 +12,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
 
 **A working, decentralized training system where edge nodes learn from private data they never share.**
-Trains a shared model across simulated devices, clips + noises every gradient (differential privacy), and merges updates with Federated Averaging — verified end-to-end, loss `2.11 → 0.54` over[...]
+Trains a shared model across simulated devices, clips + noises every gradient (differential privacy), and merges updates with Federated Averaging — verified end-to-end, loss `2.11 → 0.54` over 25 rounds
 
 • [📖 Full Project Guide](docs/Federated_Learning_Network_Project_Guide.pdf) • [📊 Live Metrics](http://localhost:9100/metrics) • [🏗️ Architecture](#️-architecture) •
 
