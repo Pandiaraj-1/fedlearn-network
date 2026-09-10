@@ -220,7 +220,7 @@ Publish weights → RabbitMQ (model_updates) → aggregator consumes
 
 Full logs: [`docs/sample_run_aggregator.log`](docs/sample_run_aggregator.log)
 
-![Output](docs/images/output.png)
+![Output](images/output.png)
 
 ---
 
